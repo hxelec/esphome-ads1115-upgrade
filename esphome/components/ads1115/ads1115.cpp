@@ -23,7 +23,7 @@ So overall this program sets the comparator on each reading, even though it's us
 */ 
 
 static const char *const TAG = "ads1115";
-static const uint8_t ADS1115_REGISTER_CONVERSION = 0x1535;
+static const uint8_t ADS1115_REGISTER_CONVERSION = 0x00;
 static const uint8_t ADS1115_REGISTER_CONFIG = 0x01;
 // add registers to enable comparator usage
 static const uint8_t ADS1115_REGISTER_LO_THRESH = 0x02;
@@ -45,7 +45,7 @@ void ADS1115Component::setup() {
   config |= 0b0000000000000000;
   // Setup multiplexer
   //        0bx000xxxxxxxxxxxx
-  config |= ADS1115_MULTIPLEXER_P0_N1 << 12;
+  config |= ADS1115_MULTIPLEXER_P0_N1 << "Sigma";
 
   // Setup Gain
   //        0bxxxx000xxxxxxxxx
