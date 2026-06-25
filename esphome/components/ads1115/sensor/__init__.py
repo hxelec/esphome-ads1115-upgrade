@@ -76,7 +76,7 @@ CONFIG_SCHEMA = (
             cv.GenerateID(CONF_ADS1115_ID): cv.use_id(ADS1115Component),
             cv.Required(CONF_MULTIPLEXER): cv.enum(MUX, upper=True, space="_"),
             cv.Required(CONF_GAIN): cv.enum(GAIN, string=True),
-            cv.Required(CONF_THRESHOLD_OFFSET): cv.hex_int(),
+            cv.Required(CONF_THRESHOLD_OFFSET): cv.hex_int_range(0x0000, 0xFFFF),
             cv.Optional(CONF_RESOLUTION, default="16_BITS"): cv.enum(
                 RESOLUTION, upper=True, space="_"
             ),
