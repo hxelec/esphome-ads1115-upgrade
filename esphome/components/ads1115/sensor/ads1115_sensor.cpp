@@ -7,7 +7,7 @@ namespace esphome::ads1115 {
 static const char *const TAG = "ads1115.sensor";
 
 float ADS1115Sensor::sample() {
-  return this->parent_->request_measurement(this->multiplexer_, this->gain_, this->resolution_, this->samplerate_);
+  return this->parent_->request_measurement(this->multiplexer_, this->gain_, this->resolution_, this->samplerate_, this->threshold_offset_);
 }
 
 void ADS1115Sensor::update() {
@@ -24,8 +24,9 @@ void ADS1115Sensor::dump_config() {
                 "    Multiplexer: %u\n"
                 "    Gain: %u\n"
                 "    Resolution: %u\n"
-                "    Sample rate: %u",
-                this->multiplexer_, this->gain_, this->resolution_, this->samplerate_);
+                "    Sample rate: %u\n"
+                "    Threshold offset: %u",
+                this->multiplexer_, this->gain_, this->resolution_, this->samplerate_, this->threshold_offset_);
 }
 
 }  // namespace esphome::ads1115

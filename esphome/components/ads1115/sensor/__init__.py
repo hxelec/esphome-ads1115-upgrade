@@ -12,6 +12,8 @@ from esphome.const import (
     UNIT_VOLT,
 )
 
+CONF_THRESHOLD_OFFSET = "threshold_offset"
+
 from .. import CONF_ADS1115_ID, ADS1115Component, ads1115_ns
 
 AUTO_LOAD = ["voltage_sampler"]
@@ -74,6 +76,7 @@ CONFIG_SCHEMA = (
             cv.GenerateID(CONF_ADS1115_ID): cv.use_id(ADS1115Component),
             cv.Required(CONF_MULTIPLEXER): cv.enum(MUX, upper=True, space="_"),
             cv.Required(CONF_GAIN): cv.enum(GAIN, string=True),
+            cv.Required(CONF_THRESHOLD_OFFSET): cv.hex_int(),
             cv.Optional(CONF_RESOLUTION, default="16_BITS"): cv.enum(
                 RESOLUTION, upper=True, space="_"
             ),
@@ -96,3 +99,4 @@ async def to_code(config):
     cg.add(var.set_gain(config[CONF_GAIN]))
     cg.add(var.set_resolution(config[CONF_RESOLUTION]))
     cg.add(var.set_samplerate(config[CONF_SAMPLE_RATE]))
+    cg.add(var.set_threshold_offset(config[CONF_THRESHOLD_OFFSET]))
