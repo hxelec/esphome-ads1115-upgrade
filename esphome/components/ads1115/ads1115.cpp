@@ -28,7 +28,6 @@ static const uint8_t ADS1115_REGISTER_CONFIG = 0x01;
 // add registers to enable comparator usage
 static const uint8_t ADS1115_REGISTER_LO_THRESH = 0x02;
 static const uint8_t ADS1115_REGISTER_HI_THRESH = 0x03;
-static const uint16_t threshold_offset = 0x03D7; // about 1.5% change
 
 void ADS1115Component::setup() {
   // check if reading conversion register works, I think.
@@ -98,7 +97,7 @@ void ADS1115Component::dump_config() {
   }
 }
 float ADS1115Component::request_measurement(ADS1115Multiplexer multiplexer, ADS1115Gain gain,
-                                            ADS1115Resolution resolution, ADS1115Samplerate samplerate) {
+                                            ADS1115Resolution resolution, ADS1115Samplerate samplerate, uint16_t threshold_offset) {
   uint16_t config = this->prev_config_; // load setup config
   // Multiplexer
   //        0bxBBBxxxxxxxxxxxx
@@ -207,15 +206,29 @@ float ADS1115Component::request_measurement(ADS1115Multiplexer multiplexer, ADS1
 
   if (multiplexer == 0b100) { // our water tank sensor pins
     // set lower threshold
-    if (!this->write_byte_16(ADS1115_REGISTER_LO_THRESH, static_cast<uint16_t>(raw_conversion - threshold_offset))) {
-      this->status_set_warning();
-      return NAN;
+    if (threshold_offset > raw_conversion) {
+      if (!this->write_byte_16(ADS1115_REGISTER_LO_THRESH, 0x0000)) {
+        this->status_set_warning();
+        return NAN;
+      }
+    } else {
+      if (!this->write_byte_16(ADS1115_REGISTER_LO_THRESH, static_cast<uint16_t>(raw_conversion - threshold_offset))) {
+        this->status_set_warning();
+        return NAN;
+      }
     }
 
     // set upper threshold
-    if (!this->write_byte_16(ADS1115_REGISTER_LO_THRESH, static_cast<uint16_t>(raw_conversion + threshold_offset))) {
-      this->status_set_warning();
-      return NAN;
+    if (threshold_offset > (0xFFFF - raw_conversion)) {
+      if (!this->write_byte_16(ADS1115_REGISTER_HI_THRESH, 0xFFFF)) {
+        this->status_set_warning();
+        return NAN;
+      }
+    } else {
+      if (!this->write_byte_16(ADS1115_REGISTER_HI_THRESH, static_cast<uint16_t>(raw_conversion + threshold_offset))) {
+        this->status_set_warning();
+        return NAN;
+      }
     }
   }
 

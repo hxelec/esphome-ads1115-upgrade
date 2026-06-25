@@ -21,6 +21,8 @@ class ADS1115Sensor : public sensor::Sensor,
   void set_gain(ADS1115Gain gain) { this->gain_ = gain; }
   void set_resolution(ADS1115Resolution resolution) { this->resolution_ = resolution; }
   void set_samplerate(ADS1115Samplerate samplerate) { this->samplerate_ = samplerate; }
+  void set_threshold_offset(uint16_t threshold_offset) { this->threshold_offset_ = threshold_offset; }
+
   float sample() override;
 
   void dump_config() override;
@@ -30,6 +32,7 @@ class ADS1115Sensor : public sensor::Sensor,
   ADS1115Gain gain_;
   ADS1115Resolution resolution_;
   ADS1115Samplerate samplerate_;
+  uint16_t threshold_offset_;
 };
 
 }  // namespace esphome::ads1115
