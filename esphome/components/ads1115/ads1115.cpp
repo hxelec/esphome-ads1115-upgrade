@@ -8,7 +8,7 @@ namespace esphome::ads1115 {
 Note from hxelec:
 
 This is my first ever time not blindly using Arduino libraries. I am a complete beginner in embedded dev, other than very basic Arduino which I wouldn't count lol.
-I am by no means experienced ennough to make judgements... but I think the overall purpose of certain sections in code could be better explained.
+I am by no means experienced enough to make judgements... but I think the overall purpose of certain sections in code could be better explained.
 Either that or I'm just misinterpreting the use case of this development environment or haven't looked hard enough I suppose.
 Anyways, I used exercism.org to do 20 C++ activities and binge-watched The Cherno in preparation for this.
 
@@ -73,9 +73,9 @@ void ADS1115Component::setup() {
   //        0bxxxxxxxxxxxx0xxx
   config |= 0b0000000000000000;
 
-  // Set comparator latch enabled - true
-  //        0bxxxxxxxxxxxxx1xx
-  config |= 0b0000000000000100;
+  // Set comparator latch enabled - false
+  //        0bxxxxxxxxxxxxx0xx
+  config |= 0b0000000000000000; // should be no need
 
   // Set comparator que mode - assert after 4 conversions
   //        0bxxxxxxxxxxxxxx10
@@ -218,8 +218,8 @@ float ADS1115Component::request_measurement(ADS1115Multiplexer multiplexer, ADS1
   }
 
   // set upper threshold
-  if (threshold_offset > (0xFFFF - raw_conversion)) {
-    if (!this->write_byte_16(ADS1115_REGISTER_HI_THRESH, 0xFFFF)) {
+  if (threshold_offset > (0x7FFF - raw_conversion)) { // max in single-ended mode
+    if (!this->write_byte_16(ADS1115_REGISTER_HI_THRESH, 0x7FFF)) {
       this->status_set_warning();
       return NAN;
     }

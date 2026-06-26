@@ -12,7 +12,7 @@ from esphome.const import (
     UNIT_VOLT,
 )
 
-CONF_THRESHOLD_OFFSET = "threshold_offset"
+CONF_THRESHOLD_OFFSET = "threshold_offset" # configure by 'threshold_offset' in .yaml
 
 from .. import CONF_ADS1115_ID, ADS1115Component, ads1115_ns
 
